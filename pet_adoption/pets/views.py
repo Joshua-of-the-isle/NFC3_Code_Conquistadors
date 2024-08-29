@@ -9,7 +9,7 @@ def shelter_list(request):
 # View to display details of a specific shelter
 def shelter_detail(request, shelter_id):
     shelter = get_object_or_404(PetShelter, pk=shelter_id)
-    pets_in_shelter = shelter.pets.all() # Use the related_name 'pets' to access all pets in the shelter#-
+    pets = shelter.pet_set.all() # Use the related_name 'pets' to access all pets in the shelter#-
     return render(request, 'shelter_detail.html', {'shelter': shelter, 'pets': pets})
 
 # View to list all pets

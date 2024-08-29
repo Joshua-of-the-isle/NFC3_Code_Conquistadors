@@ -39,7 +39,7 @@ class Pet(models.Model):
     arrival_date = models.DateField(auto_now_add=True)
     adopted = models.BooleanField(default=False)
     # ForeignKey relationship to PetShelter
-    shelter = models.ForeignKey(PetShelter, on_delete=models.CASCADE, related_name='pets')
+    shelter = models.ForeignKey(PetShelter, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='pets-images/', blank=True, null=True)
 
     class Meta:
