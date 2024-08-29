@@ -29,11 +29,23 @@ class Pet(models.Model):
         ('Cat', 'Cat'),
         ('Bird', 'Bird'),
         ('Rabbit', 'Rabbit'),
+        ('Tortoise', 'Tortoise'),
+        ('Lizard', 'Lizard'),
         ('Other', 'Other'),
+    ]
+    GENDER_CHOICES=[
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Unknown', 'Unknown'),
+        ('Unsexed', 'Unsexed'),
     ]
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50)
     pet_type = models.CharField(max_length=10, choices=PET_TYPES)
+    breed = models.CharField(max_length=50, default='Unknown')
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Unknown')
+    allergen=models.BooleanField(default=False)
+    friendly=models.BooleanField(default=True)
     age = models.IntegerField()
     description = models.TextField()
     arrival_date = models.DateField(auto_now_add=True)
