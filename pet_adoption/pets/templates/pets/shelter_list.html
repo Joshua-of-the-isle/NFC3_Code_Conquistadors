@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Shelters</title>
+</head>
+<body>
+    <h1>Pet Shelters</h1>
+    <ul>
+        {% for shelter in shelters %}
+            <li>
+                <a href="{% url 'shelter_detail' shelter.pk %}">{{ shelter.name }}</a> - {{ shelter.city }}, {{ shelter.state }}
+            </li>
+        {% empty %}
+            <li>No pet shelters available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

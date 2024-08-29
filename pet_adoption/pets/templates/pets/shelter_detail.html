@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ shelter.name }}</title>
+</head>
+<body>
+    <h1>{{ shelter.name }}</h1>
+    <p><strong>Address:</strong> {{ shelter.address }}</p>
+    <p><strong>City:</strong> {{ shelter.city }}</p>
+    <p><strong>State:</strong> {{ shelter.state }}</p>
+    <p><strong>Capacity:</strong> {{ shelter.capacity }}</p>
+    
+    <h2>Pets in this Shelter</h2>
+    <ul>
+        {% for pet in shelter.pet_set.all %}
+            <li><a href="{% url 'pet_detail' pet.pk %}">{{ pet.name }}</a> - {{ pet.pet_type }}</li>
+        {% empty %}
+            <li>No pets available in this shelter.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

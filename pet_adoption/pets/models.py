@@ -20,7 +20,7 @@ class PetShelter(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('pet_shelter_detail', args=[str(self.id)])
+        return reverse('shelter_detail', args=[str(self.id)])
 
 # Define the Pet model
 class Pet(models.Model):
@@ -48,5 +48,5 @@ class Pet(models.Model):
         return f"{self.name} ({self.pet_type})"
     
     def get_absolute_url(self):
-        return reverse('pet_shelter_detail', args=[str(self.id)])
+        return reverse('pet_detail', args=[str(self.id)])
 

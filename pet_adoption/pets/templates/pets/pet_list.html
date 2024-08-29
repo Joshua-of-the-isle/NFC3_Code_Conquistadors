@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pets</title>
+</head>
+<body>
+    <h1>Available Pets</h1>
+    <ul>
+        {% for pet in pets %}
+            <li>
+                <a href="{% url 'pet_detail' pet.pk %}">{{ pet.name }}</a> - {{ pet.pet_type }} ({{ pet.shelter.name }})
+            </li>
+        {% empty %}
+            <li>No pets available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
