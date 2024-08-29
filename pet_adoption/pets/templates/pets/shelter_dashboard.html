@@ -1,0 +1,197 @@
+{% load extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ shelter.name }} - Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pet Shelter</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'shelter_dashboard' %}">Dashboard</a>
+                </li>
+                <!-- Add other navigation links here -->
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Dashboard Content -->
+    <div class="container mt-4">
+        <h1>{{ shelter.name }} - Dashboard</h1>
+        <div class="row">
+            <!-- Total Pets Card -->
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Pets</div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ total_pets }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friendly Pets Card -->
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Friendly Pets</div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ friendly_count }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allergic Pets Card -->
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">Pets with Allergens</div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{ allergen_count }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pet Types Chart -->
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Pets by Type</h2>
+                <canvas id="petTypesChart"></canvas>
+            </div>
+
+            <!-- Gender Distribution Chart -->
+            <div class="col-md-6">
+                <h2>Gender Distribution</h2>
+                <canvas id="genderChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Adoption Status Chart -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h2>Adoption Status</h2>
+                <canvas id="adoptionChart"></canvas>
+            </div>
+
+            <!-- Age Distribution Chart -->
+            <div class="col-md-6">
+                <h2>Age Distribution</h2>
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">© 2024 Pet Shelter</span>
+        </div>
+    </footer>
+
+    <!-- Include Bootstrap JS (Optional, for interactivity) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        // Pets by Type Chart
+        const petTypesCtx = document.getElementById('petTypesChart').getContext('2d');
+        new Chart(petTypesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ pet_types|pluck:'pet_type'|safe }},
+                datasets: [{
+                    data: {{ pet_types|pluck:'count'|safe }},
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED'],
+                }]
+            }
+        });
+    
+        // Gender Distribution Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ gender_distribution|pluck:'gender'|safe }},
+                datasets: [{
+                    data: {{ gender_distribution|pluck:'count'|safe }},
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#FF9F40'],
+                }]
+            }
+        });
+    
+        // Corrected Adoption Status Chart with Integer Y-Axis
+        const adoptionCtx = document.getElementById('adoptionChart').getContext('2d');
+        new Chart(adoptionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Not Adopted', 'Adopted'],
+                datasets: [{
+                    label:'Status',
+                    data: {{ adoption_status|pluck:'count'|safe }},
+                    backgroundColor: ['#FF9F40', '#4BC0C0'],
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) { return Number(value).toFixed(0); },
+                        title: {
+                            display: true,
+                            text: 'Number of Animals'  // Label for the Y-Axis
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Age Distribution Chart with Integer Y-Axis and Labels
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+            type: 'line',
+            data: {
+                labels: {{ age_distribution|pluck:'age'|safe }},
+                datasets: [{
+                    label: 'Age Distribution',
+                    data: {{ age_distribution|pluck:'count'|safe }},
+                    borderColor: '#36A2EB',
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'  // Label for the X-Axis
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) { return Number(value).toFixed(0); }  // Ensures Y-Axis displays integers
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Animals'  // Label for the Y-Axis
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>
+
