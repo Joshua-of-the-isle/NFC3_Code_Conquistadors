@@ -58,3 +58,8 @@ def shelter_dashboard(request):
     }
 
     return render(request, 'pets/shelter_dashboard.html', context)
+
+def pet_list_private(request):
+    # Fetch all pet objects from the database
+    pets = Pet.objects.filter(shelter=request.user.shelter.all())
+    return render(request, 'pets/pet_list.html', {'pets': pets})
