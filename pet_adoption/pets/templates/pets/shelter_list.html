@@ -4,7 +4,22 @@
     <title>Pet Shelters</title>
 </head>
 <body>
+    
     <h1>Pet Shelters</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'pet_list' %}">Home</a></li>
+            <!-- Check if the user is authenticated -->
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
     <ul>
         {% for shelter in shelters %}
             <li>

@@ -13,7 +13,8 @@ def shelter_detail(request, shelter_id):
 
 def pet_list(request):
     pets = Pet.objects.all()
-    pet_filter = PetFilter(request.GET, queryset=pets)
+    initial_data = {'friendly': True} 
+    pet_filter = PetFilter(request.GET or initial_data, queryset=pets)
     return render(request, 'pets/pet_list.html', {'filter': pet_filter})
 
 # View to display details of a specific shelter
