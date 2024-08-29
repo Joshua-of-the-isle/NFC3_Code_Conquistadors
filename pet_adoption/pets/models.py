@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse# Define the PetShelter model
+from django.core.mail import send_mail
+from django.conf import settings
 class PetShelter(models.Model):
     id=models.BigAutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shelters')
@@ -28,9 +30,6 @@ class Pet(models.Model):
         ('Dog', 'Dog'),
         ('Cat', 'Cat'),
         ('Bird', 'Bird'),
-        ('Rabbit', 'Rabbit'),
-        ('Tortoise', 'Tortoise'),
-        ('Lizard', 'Lizard'),
         ('Other', 'Other'),
     ]
     GENDER_CHOICES=[
@@ -49,7 +48,7 @@ class Pet(models.Model):
     age = models.IntegerField()
     description = models.TextField()
     arrival_date = models.DateField(auto_now_add=True)
-    adopted = models.BooleanField(default=False)
+    under_adoption = models.BooleanField(default=False)
     # ForeignKey relationship to PetShelter
     shelter = models.ForeignKey(PetShelter, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='pets-images/', blank=True, null=True)
@@ -62,3 +61,33 @@ class Pet(models.Model):
     def get_absolute_url(self):
         return reverse('pet_detail', args=[str(self.id)])
 
+class PetAdoptionRequest(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='adoption_requests')
+    shelter = models.ForeignKey(PetShelter, on_delete=models.CASCADE, related_name='adoption_requests')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='adoption_requests')
+    request_date = models.DateField(auto_now_add=True)
+    status = models.CharField(
+        max_length=10,
+        choices=[('Pending', 'Pending'), ('Accepted', 'Accepted'), ('Rejected', 'Rejected')],
+        default='Pending'
+    )
+    comments = models.TextField()
+
+    class Meta:
+        ordering = ('-request_date',)
+
+    def __str__(self):
+        return f"{self.user.username}'s request for {self.pet.name}"
+
+    def get_absolute_url(self):
+        return reverse('adoption_request_detail', args=[str(self.id)])
+
+    def send_email_notification(self):
+        subject = f"Your adoption request for {self.pet.name} has been {self.status.lower()}"
+        message = f"Dear {self.user.username},\n\nYour adoption request for {self.pet.name} has been {self.status.lower()}.\n\n{self.comments}\n\nThank you,\nPet Shelter"
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [self.user.email]
+        )

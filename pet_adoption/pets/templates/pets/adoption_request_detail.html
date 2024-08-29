@@ -1,0 +1,14 @@
+{% extends "base_manage.html" %}
+{% block content %}
+<h2>Adoption Request Detail</h2>
+<p>Pet: {{ adoption_request.pet.name }}</p>
+<p>Shelter: {{ adoption_request.shelter.name }}</p>
+<p>User: {{ adoption_request.user.username }}</p>
+<p>Date: {{ adoption_request.request_date }}</p>
+<p>Status: {{ adoption_request.get_status_display }}</p>
+<p>Comments: {{ adoption_request.comments }}</p>
+{% if adoption_request.status == 'Pending' and adoption_request.shelter.owner == request.user %}
+    <a href="{% url 'update_adoption_request_status' adoption_request.pk 'Accepted' %}">Accept Request</a>
+    <a href="{% url 'update_adoption_request_status' adoption_request.pk 'Rejected' %}">Reject Request</a>
+{% endif %}
+{% endblock %}

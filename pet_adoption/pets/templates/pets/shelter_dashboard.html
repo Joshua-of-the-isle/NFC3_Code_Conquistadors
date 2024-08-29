@@ -20,11 +20,14 @@
                     <a class="nav-link" href="{% url 'shelter_dashboard' %}">Dashboard</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Manage Pets</a>
+                    <a class="nav-link" href="{% url 'pet_list_private' %}">Manage Pets</a>
                 </li>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'pet_list' %}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Manage Requests</a>
                 </li>
                 <!-- Add other navigation links here -->
             </ul>

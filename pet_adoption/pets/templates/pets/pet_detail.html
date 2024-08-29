@@ -6,11 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ pet.name }}</title>
-    <!-- Bootstrap CSS CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+<style>
         .navbar-custom {
-            background-color: #343a40; /* Dark background color */
+            background-color:  #5e17eb; /* Dark background color */
         }
         .navbar-brand {
             margin-right: 2rem; /* Space for logo */
@@ -24,9 +23,20 @@
         .card {
             border-radius: 15px; /* Rounded corners for a classy look */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            width: 300px; /* Adjust the width of the card */
+            margin: auto; /* Center the card within its container */
         }
         .card-img-top {
             border-radius: 15px 15px 0 0; /* Rounded top corners for image */
+            width: 100%; /* Make the image fit the width of the card */
+            height: 200px; /* Adjust the height of the image */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+            display: block; /* Make the image a block-level element */
+            margin-left: auto; /* Center the image horizontally */
+            margin-right: auto; /* Center the image horizontally */
+        }
+        .card-body {
+            padding: 1rem; /* Adjust padding inside the card body */
         }
     </style>
 </head>
@@ -39,7 +49,7 @@
         <nav class="navbar navbar-expand-lg navbar-custom mb-4">
             <a class="navbar-brand" href="{% url 'pet_list' %}">
                 <!-- Logo Placeholder -->
-                <img src="{% static 'logo.jpg' %}" alt="Logo" style="height: 40px;">
+                <img src="tortoise-1.jpg" alt="Logo" style="height: 10px;">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -73,9 +83,9 @@
             </div>
         </nav>
         
-        <div class="card mb-4">
+        <div class="card mb-4 my-custom-card">
             {% if pet.image %}
-                <img class="card-img-top" src="{{ pet.image.url }}" alt="{{ pet.name }}">
+                <img class="card-img-top my-custom-img" src="{{ pet.image.url }}" alt="{{ pet.name }}">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ pet.name }}</h5>
@@ -87,7 +97,7 @@
                 <p class="card-text"><strong>Shelter:</strong> <a href="{{pet.shelter.get_absolute_url}}">{{ pet.shelter.name }}</a></p>
             </div>
         </div>
-    </div>
+        
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -95,3 +105,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+

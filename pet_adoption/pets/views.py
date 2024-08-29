@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404
-from .models import PetShelter, Pet
+from django.shortcuts import render, get_object_or_404,redirect
+from .models import PetShelter, Pet, PetAdoptionRequest
 from .filters import PetFilter
 from django.contrib.auth.decorators import login_required
 from .decorators import group_required
 from django.db.models import Count
-
+from .forms import PetAdoptionRequestForm
 # View to list all pet shelters
 def shelter_list(request):
     shelters = PetShelter.objects.all()
@@ -61,5 +61,40 @@ def shelter_dashboard(request):
 
 def pet_list_private(request):
     # Fetch all pet objects from the database
-    pets = Pet.objects.filter(shelter=request.user.shelter.all())
+    pets = Pet.objects.filter(shelter=request.user.shelters.all()[0])
     return render(request, 'pets/pet_list.html', {'pets': pets})
+
+
+@login_required
+def adopt_pet(request, pet_id):
+    pet = get_object_or_404(Pet, pk=pet_id)
+    if request.method == 'POST':
+        form = PetAdoptionRequestForm(request.POST)
+        if form.is_valid():
+            adoption_request = form.save(commit=False)
+            adoption_request.pet = pet
+            adoption_request.shelter = pet.shelter
+            adoption_request.user = request.user
+            adoption_request.save()
+            return redirect(adoption_request.get_absolute_url())
+    else:
+        form = PetAdoptionRequestForm(initial={'comments': ''})
+    
+    return render(request, 'adopt_pet.html', {'form': form, 'pet': pet})
+
+
+@login_required
+@group_required('Shelter Owner')
+def adoption_request_detail(request, pk):
+    adoption_request = get_object_or_404(PetAdoptionRequest, pk=pk)
+    return render(request, 'adoption_request_detail.html', {'adoption_request': adoption_request})
+
+@login_required
+@group_required('Shelter Owner')
+def update_adoption_request_status(request, pk, status):
+    adoption_request = get_object_or_404(PetAdoptionRequest, pk=pk)
+    if request.user == adoption_request.shelter.owner:
+        adoption_request.status = status
+        adoption_request.save()
+        adoption_request.send_email_notification()
+    return redirect(adoption_request.get_absolute_url())

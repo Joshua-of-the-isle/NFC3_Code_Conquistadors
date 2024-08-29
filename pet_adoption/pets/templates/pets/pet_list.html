@@ -1,77 +1,129 @@
 {% load custom_tags %}
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet List</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .filter-form {
             margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .navbar-custom {
+            background-color: #343a40; /* Dark background color */
+        }
+        .navbar-nav .nav-link {
+            color: #f8f9fa; /* Light text color */
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107; /* Highlight color on hover */
+        }
+        .table {
+            margin-top: 20px;
+        }
+        .table thead th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    
-    <h1>Available Pets</h1>
-    <nav>
-        <ul>
-            <li><a href="{% url 'pet_list' %}">Home</a></li>
-            <!-- Check if the user is authenticated -->
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% if user|is_in_group:"Shelter Owner" %}
-                <li><a href="{% url 'shelter_dashboard' %}">Manage Your Shelter</a></li>
-                {% endif %}
-            {% else %}
-                <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'signup' %}">Sign Up</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-    <!-- Filter Form -->
-    <form method="get" class="filter-form">
-        {{ filter.form.as_p }}
-        <button type="submit">Filter</button>
-    </form>
+    <div class="container">
+        <header class="my-4">
+            <h1 class="text-center">Available Pets</h1>
+        </header>
+        
+        <nav class="navbar navbar-expand-lg navbar-custom mb-4">
+            <a class="navbar-brand" href="{% url 'pet_list' %}">
+                <!-- Logo Placeholder -->
+                <img src="{% static 'logo.png' %}" alt="Logo" style="height: 40px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shelter_list' %}">List of Shelters</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                        {% if user|is_in_group:"Shelter Owner" %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'shelter_dashboard' %}">Manage Your Shelter</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shelter_list' %}">List of Shelters</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Filter Form -->
+        <form method="get" class="filter-form">
+            {{ filter.form.as_p }}
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
 
-    <!-- Filtered Pet List -->
-    {% if filter.qs.exists %}  <!-- Check if any pets are available -->
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Breed</th>
-                <th>Gender</th>
-                <th>Hypoallergenic</th>
-                <th>Friendly</th>
-                <th>Age</th>
-                <th>Adopted</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pet in filter.qs %}
+        <!-- Filtered Pet List -->
+        {% if filter.qs.exists %}
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td><a href="{{pet.get_absolute_url}}">{{ pet.name }}</a></td>
-                    <td>{{ pet.pet_type }}</td>
-                    <td>{{ pet.breed }}</td>
-                    <td>{{ pet.gender }}</td>
-                    <td>{{ pet.allergen|yesno:"Yes,No" }}</td>
-                    <td>{{ pet.friendly|yesno:"Yes,No" }}</td>
-                    <td>{{ pet.age }}</td>
-                    <td>{{ pet.adopted|yesno:"Yes,No" }}</td>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Breed</th>
+                    <th>Gender</th>
+                    <th>Hypoallergenic</th>
+                    <th>Friendly</th>
+                    <th>Age</th>
+                    <th>Adopted</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>No pets available.</p>
-    {% endif %}
-</body>
-</html>
+            </thead>
+            <tbody>
+                {% for pet in filter.qs %}
+                    <tr>
+                        <td><a href="{{pet.get_absolute_url}}">{{ pet.name }}</a></td>
+                        <td>{{ pet.pet_type }}</td>
+                        <td>{{ pet.breed }}</td>
+                        <td>{{ pet.gender }}</td>
+                        <td>{{ pet.allergen|yesno:"Yes,No" }}</td>
+                        <td>{{ pet.friendly|yesno:"Yes,No" }}</td>
+                        <td>{{ pet.age }}</td>
+                        <td>{{ pet.adopted|yesno:"Yes,No" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="text-center">No pets available.</p>
+        {% endif %}
+    </div>
 
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

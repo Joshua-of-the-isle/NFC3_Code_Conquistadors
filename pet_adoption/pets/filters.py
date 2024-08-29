@@ -3,11 +3,6 @@ from django import forms
 from .models import Pet
 
 class PetFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(
-        lookup_expr='icontains',
-        widget=forms.TextInput(attrs={'placeholder': 'Enter pet name'}),
-        help_text='Filter pets by name (case-insensitive).'
-    )
     pet_type = django_filters.ChoiceFilter(
         choices=Pet.PET_TYPES,
         widget=forms.Select,

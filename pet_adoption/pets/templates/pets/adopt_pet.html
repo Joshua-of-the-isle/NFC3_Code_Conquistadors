@@ -1,0 +1,11 @@
+{% extends "base_manage.html" %}
+{% block content %}
+<h2>Adopt {{ pet.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="pet" value="{{ pet.id }}">
+    <input type="hidden" name="shelter" value="{{ pet.shelter.id }}">
+    <button type="submit">Submit Adoption Request</button>
+</form>
+{% endblock %}

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
     'pets',
     'accounts',
+    'shop'
 ]
 
 MIDDLEWARE = [
@@ -122,8 +123,18 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'pet_list'
 LOGOUT_REDIRECT_URL = 'login'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'postmaster@sandbox3d6c1cd9be5b414d8ceb4ad5b5bf68d4.mailgun.org'
+EMAIL_HOST_PASSWORD = '18100e33766f348899edd00632a505fb-777a617d-f763d91d'
+DEFAULT_FROM_EMAIL = 'postmaster@sandbox3d6c1cd9be5b414d8ceb4ad5b5bf68d4.mailgun.org'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+

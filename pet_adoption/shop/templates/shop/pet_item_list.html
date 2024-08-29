@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #333;
+        }
+        .filter-form {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .filter-form div {
+            margin-bottom: 15px;
+        }
+        .filter-form label {
+            font-weight: bold;
+        }
+        .filter-form small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+        }
+        .filter-form button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+        img {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pet Items</h1>
+
+    <!-- Filter Form -->
+    <form method="get" class="filter-form">
+        <div>
+            <label for="id_name">{{ filterset.form.name.label }}</label><br>
+            {{ filterset.form.name }}<br>
+            <small>{{ filterset.form.name.help_text }}</small>
+        </div>
+        <div>
+            <label for="id_category">{{ filterset.form.category.label }}</label><br>
+            {{ filterset.form.category }}<br>
+            <small>{{ filterset.form.category.help_text }}</small>
+        </div>
+        <div>
+            <label for="id_min_price">{{ filterset.form.min_price.label }}</label><br>
+            {{ filterset.form.min_price }}<br>
+            <small>{{ filterset.form.min_price.help_text }}</small>
+        </div>
+        <div>
+            <label for="id_max_price">{{ filterset.form.max_price.label }}</label><br>
+            {{ filterset.form.max_price }}<br>
+            <small>{{ filterset.form.max_price.help_text }}</small>
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Display Filtered Results -->
+    <h2>Filtered Pet Items</h2>
+    <ul>
+        {% for item in filterset.qs %}
+        <li>
+            <strong>{{ item.name }}</strong> - {{ item.category }} - ${{ item.price }}
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" width="100">
+            {% endif %}
+        </li>
+        {% empty %}
+        <li>No items found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
