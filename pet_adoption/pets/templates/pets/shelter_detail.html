@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +13,9 @@
             {% if user.is_authenticated %}
                 <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% if user|is_in_group:"Shelter Owner" %}
+                <li><a href="#">Manage Your Shelter</a></li>
+                {% endif %}
             {% else %}
                 <li><a href="{% url 'shelter_list' %}">List of Shelters</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
