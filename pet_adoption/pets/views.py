@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import PetShelter, Pet
-
+from .filters import PetFilter
 # View to list all pet shelters
 def shelter_list(request):
     shelters = PetShelter.objects.all()
@@ -11,10 +11,10 @@ def shelter_detail(request, shelter_id):
     shelter = get_object_or_404(PetShelter, pk=shelter_id)
     return render(request, 'pets/shelter_detail.html', {'shelter': shelter})
 
-# View to list all pets
 def pet_list(request):
     pets = Pet.objects.all()
-    return render(request, 'pets/pet_list.html', {'pets': pets})
+    pet_filter = PetFilter(request.GET, queryset=pets)
+    return render(request, 'pets/pet_list.html', {'filter': pet_filter})
 
 # View to display details of a specific shelter
 def pet_detail(request, pet_id):

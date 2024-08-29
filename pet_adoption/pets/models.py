@@ -43,7 +43,7 @@ class Pet(models.Model):
     name = models.CharField(max_length=50)
     pet_type = models.CharField(max_length=10, choices=PET_TYPES)
     breed = models.CharField(max_length=50, default='Unknown')
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Unknown')
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     allergen=models.BooleanField(default=False)
     friendly=models.BooleanField(default=True)
     age = models.IntegerField()

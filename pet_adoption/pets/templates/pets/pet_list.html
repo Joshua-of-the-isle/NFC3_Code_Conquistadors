@@ -1,18 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pets</title>
+    <title>Pet List</title>
+    <style>
+        .filter-form {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <h1>Available Pets</h1>
-    <ul>
-        {% for pet in pets %}
-            <li>
-                <a href="{% url 'pet_detail' pet.pk %}">{{ pet.name }}</a> - {{ pet.pet_type }} ({{ pet.shelter.name }})
-            </li>
-        {% empty %}
-            <li>No pets available.</li>
-        {% endfor %}
-    </ul>
+    
+    <!-- Filter Form -->
+    <form method="get" class="filter-form">
+        {{ filter.form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Filtered Pet List -->
+    {% if filter.qs.exists %}  <!-- Check if any pets are available -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Breed</th>
+                <th>Gender</th>
+                <th>Hypoallergenic</th>
+                <th>Friendly</th>
+                <th>Age</th>
+                <th>Adopted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pet in filter.qs %}
+                <tr>
+                    <td>{{ pet.name }}</td>
+                    <td>{{ pet.pet_type }}</td>
+                    <td>{{ pet.breed }}</td>
+                    <td>{{ pet.gender }}</td>
+                    <td>{{ pet.allergen|yesno:"Yes,No" }}</td>
+                    <td>{{ pet.friendly|yesno:"Yes,No" }}</td>
+                    <td>{{ pet.age }}</td>
+                    <td>{{ pet.adopted|yesno:"Yes,No" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No pets available.</p>
+    {% endif %}
 </body>
+</html>
+
 </html>
