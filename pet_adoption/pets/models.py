@@ -48,7 +48,7 @@ class Pet(models.Model):
     age = models.IntegerField()
     description = models.TextField()
     arrival_date = models.DateField(auto_now_add=True)
-    under_adoption = models.BooleanField(default=False)
+    adopted = models.BooleanField(default=False)
     # ForeignKey relationship to PetShelter
     shelter = models.ForeignKey(PetShelter, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='pets-images/', blank=True, null=True)

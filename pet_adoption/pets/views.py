@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from .decorators import group_required
 from django.db.models import Count
 from .forms import PetAdoptionRequestForm
+def index(request):
+    return render(request, 'pets/index.html')
+
+
 # View to list all pet shelters
 def shelter_list(request):
     shelters = PetShelter.objects.all()

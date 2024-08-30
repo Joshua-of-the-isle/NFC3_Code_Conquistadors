@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 urlpatterns = [
+    path('',views.index,name='index'),  # User authentication and registration URLs
     path('shelters/', views.shelter_list, name='shelter_list'),  # List of pet shelters
     path('shelters/<int:shelter_id>/',views.shelter_detail, name='shelter_detail'),  # Detail view of a pet shelter
     path('pets/', views.pet_list, name='pet_list'),  # List of pets
